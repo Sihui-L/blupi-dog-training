@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS from the original design */
+.bg-gradient-to-br {
+  background: linear-gradient(to bottom right, var(--mantine-color-primary-6), var(--mantine-color-secondary-6));
+}
+
+.from-primary {
+  --tw-gradient-from: var(--mantine-color-primary-6) var(--tw-gradient-from-position);
+}
+
+.to-secondary {
+  --tw-gradient-to: var(--mantine-color-secondary-6) var(--tw-gradient-to-position);
+}
