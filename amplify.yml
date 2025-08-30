@@ -1,17 +1,36 @@
 version: 1
-applications:
-  - frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm ci --legacy-peer-deps
-        build:
-          commands:
-            - npm run build
-      artifacts:
-        baseDirectory: dist
-        files:
-          - "**/*"
-      cache:
-        paths:
-          - node_modules/**/*
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Starting pre-build phase..."
+        - node --version
+        - npm --version
+        # Install dependencies
+        - npm ci
+        # Create media directory for uploads
+        - mkdir -p media
+        - chmod 755 media
+        # Generate Payload types if script exists
+        - npm run generate:types || echo "Types generation skipped"
+    build:
+      commands:
+        - echo "Starting build phase..."
+        # Set NODE_ENV for production build
+        - export NODE_ENV=production
+        # Build the Next.js application
+        - npm run build
+    postBuild:
+      commands:
+        - echo "Build completed successfully"
+        - echo "Next.js build artifacts created"
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+    name: BlupiDogTraining-$(date +%Y-%m-%d)
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
+      - .npm/**/*
