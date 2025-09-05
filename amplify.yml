@@ -4,6 +4,7 @@ frontend:
     preBuild:
       commands:
         - echo "Starting pre-build phase..."
+        - nvm use 20
         - node --version
         - npm --version
         # Install dependencies
