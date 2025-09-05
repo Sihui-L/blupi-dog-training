@@ -48,7 +48,7 @@ export default function PrivateSessionPage() {
 
   const handleSubmit = (values: PrivateSessionFormData) => {
     console.log("Private session inquiry:", values);
-    showSuccess("Your inquiry has been submitted! We'll get back to you soon.");
+    showSuccess("Success", "Your inquiry has been submitted! We'll get back to you soon.");
     form.reset();
   };
 

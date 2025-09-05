@@ -1,9 +1,14 @@
 version: 1
+compute:
+  runtime: nodejs20
+  memory: 1024 # Increase from default 512MB
+  timeout: 60   # Increase from default 30s
 frontend:
   phases:
     preBuild:
       commands:
         - echo "Starting pre-build phase..."
+        - nvm use 20
         - node --version
         - npm --version
         # Install dependencies
