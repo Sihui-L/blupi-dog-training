@@ -9,7 +9,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // green
         green: {
           50: "#f0f7f2",
           100: "#d4e8d9",
@@ -22,7 +21,6 @@ module.exports = {
           800: "#287f2a",
           900: "#134324",
         },
-        // cyan
         cyan: {
           50: "#f0fbfb",
           100: "#d1f5f4",
@@ -35,7 +33,6 @@ module.exports = {
           800: "#22797d",
           900: "#114a53",
         },
-        // blue
         accent: {
           50: "#f2f9fb",
           100: "#d7f0f6",
@@ -48,7 +45,6 @@ module.exports = {
           800: "#2681c3",
           900: "#238aa6",
         },
-        // gray
         neutral: {
           50: "#f8fafc",
           100: "#f1f5f9",
