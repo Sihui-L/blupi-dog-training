@@ -13,7 +13,6 @@ const nextConfig = {
     domains: ['localhost', 'images.unsplash.com', 'via.placeholder.com'],
   },
   outputFileTracingRoot: __dirname,
-  output: 'standalone',
 }
 
 export default nextConfig
