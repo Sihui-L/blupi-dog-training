@@ -181,6 +181,8 @@ export default function WorkshopPage() {
                           Duration: {service.duration} minutes
                           {service.maxParticipants &&
                             ` • Max: ${service.maxParticipants} participants`}
+                          {service.scheduledDate && ` • ${new Date(service.scheduledDate).toLocaleDateString('en-GB', { weekday: 'short', month: 'short', day: 'numeric' })}`}
+                          {service.location && ` • ${service.location}`}
                         </Text>
                       </Stack>
                       <Text fw={600} size="lg" c="green.9">
@@ -191,6 +193,21 @@ export default function WorkshopPage() {
                   <Accordion.Panel>
                     <Stack gap="md">
                       <div>{renderDescription(service.description)}</div>
+                      
+                      {(service.scheduledDate || service.location) && (
+                        <Group gap="xl">
+                          {service.scheduledDate && (
+                            <Text size="sm" c="gray.7">
+                              📅 <Text component="span" fw={500}>{new Date(service.scheduledDate).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</Text>
+                            </Text>
+                          )}
+                          {service.location && (
+                            <Text size="sm" c="gray.7">
+                              📍 <Text component="span" fw={500}>{service.location}</Text>
+                            </Text>
+                          )}
+                        </Group>
+                      )}
 
                       <Group justify="space-between" align="center">
                         <Group>
