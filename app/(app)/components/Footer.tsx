@@ -1,11 +1,12 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:justify-items-center">
           <div>
             <Image
               src="/logo-text-transparent.png"
@@ -23,29 +24,30 @@ const Footer: React.FC = () => {
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <div className="space-y-2 text-sm">
-              <p className="text-gray-300">Contact me</p>
-              <p className="text-gray-300">FAQ</p>
-              <p className="text-gray-300">Terms and Conditions</p>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Certifications</h3>
             <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-red-600 rounded flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">ABTC</span>
-                </div>
-                <span className="text-sm text-gray-300">
-                  Registered Training Instructor
-                </span>
+              <div>
+                <Link
+                  href="/contact"
+                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                >
+                  Contact Us
+                </Link>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-cyan-700 rounded flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">AD</span>
-                </div>
-                <span className="text-sm text-gray-300">AggressiveDog.com</span>
+              <div>
+                <Link
+                  href="/faq"
+                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                >
+                  FAQ
+                </Link>
+              </div>
+              <div>
+                <Link
+                  href="/terms"
+                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                >
+                  Terms and Conditions
+                </Link>
               </div>
             </div>
           </div>

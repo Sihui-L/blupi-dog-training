@@ -1,41 +1,34 @@
-// Template images for the website
+// Template images for the website - using local images
 export const TEMPLATE_IMAGES = {
   // Hero/Landing images
-  hero: 'https://images.unsplash.com/photo-1551717743-49959800b1f6?w=800&q=80', // Dog training hero
+  hero: '/images/hero/dog-training-hero.jpeg',
   
   // About page images
   about: {
-    trainer: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=600&q=80', // Person with dog
-    horse: 'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=600&q=80', // Horse training
+    trainer: '/images/about/trainer-with-dog.jpeg',
+    horse: '/images/about/horse-training.jpeg',
   },
   
   // Service images
-  privateSession: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&q=80',
-  groupClass: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&q=80',
-  workshop: 'https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?w=400&q=80',
+  privateSession: '/images/services/private-session.jpeg',
+  groupClass: '/images/services/group-class.jpeg',
+  workshop: '/images/services/workshop.jpeg',
   
-  // Blog images
-  blog: {
-    puppyTraining: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&q=80',
-    dogBehavior: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&q=80',
-    positiveTraining: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&q=80',
-  },
-  
-  // Testimonial placeholders
+  // Testimonial client photos
   testimonials: [
-    'https://images.unsplash.com/photo-1494790108755-2616c6e2e6c3?w=100&q=80',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80',
-    'https://images.unsplash.com/photo-1463453091185-61582044d556?w=100&q=80',
-    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80',
+    '/images/testimonials/client-1.jpg',
+    '/images/testimonials/client-2.jpg', 
+    '/images/testimonials/client-3.jpg',
+    '/images/testimonials/client-4.jpg',
   ],
-  
+
   // Certification logos
   certifications: {
-    abtc: 'https://via.placeholder.com/100x100/dc2626/ffffff?text=ABTC',
-    aggressive: 'https://via.placeholder.com/100x100/33a8a7/ffffff?text=AD',
+    abtc: '/images/certifications/abtc-logo.png',
+    ccpdt: '/images/certifications/ccpdt-logo.png',
   },
   
   // Default fallbacks
-  fallback: 'https://via.placeholder.com/400x300/f3f4f6/9ca3af?text=Image+Coming+Soon',
-  avatar: 'https://via.placeholder.com/100x100/f3f4f6/9ca3af?text=Photo',
+  fallback: '/images/fallbacks/image-placeholder.jpeg',
+  avatar: '/images/fallbacks/image-placeholder.jpeg',
 } as const;

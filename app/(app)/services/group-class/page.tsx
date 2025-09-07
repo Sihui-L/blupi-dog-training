@@ -12,6 +12,7 @@ import {
   Loader,
 } from "@mantine/core";
 import PageHeader from "../../components/common/PageHeader";
+import BookingForm from "../../components/booking/BookingForm";
 
 interface Service {
   id: string;
@@ -24,6 +25,15 @@ interface Service {
   image?: any;
   isActive: boolean;
   maxParticipants?: number;
+  scheduledDate?: string;
+  location?: string;
+}
+
+interface AvailabilityInfo {
+  available: boolean;
+  spotsLeft: number;
+  maxParticipants: number;
+  reason: string;
 }
 
 const renderDescription = (description: any) => {
@@ -59,6 +69,9 @@ const renderDescription = (description: any) => {
 export default function GroupClassPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [availabilityData, setAvailabilityData] = useState<Record<string, AvailabilityInfo>>({});
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -66,7 +79,31 @@ export default function GroupClassPage() {
         const response = await fetch("/api/services/group");
         if (response.ok) {
           const data = await response.json();
-          setServices(data.services || []);
+          const serviceList = data.services || [];
+          setServices(serviceList);
+          
+          // Fetch availability for each service
+          const availabilityPromises = serviceList.map(async (service: Service) => {
+            try {
+              const availResponse = await fetch(`/api/services/availability/${service.id}`);
+              if (availResponse.ok) {
+                const availData = await availResponse.json();
+                return { serviceId: service.id, availability: availData };
+              }
+            } catch (error) {
+              console.error(`Error fetching availability for service ${service.id}:`, error);
+            }
+            return { serviceId: service.id, availability: { available: false, reason: "Error checking availability", spotsLeft: 0, maxParticipants: 0 } };
+          });
+          
+          const availabilityResults = await Promise.all(availabilityPromises);
+          const availabilityMap: Record<string, AvailabilityInfo> = {};
+          
+          availabilityResults.forEach(result => {
+            availabilityMap[result.serviceId] = result.availability;
+          });
+          
+          setAvailabilityData(availabilityMap);
         }
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -77,6 +114,11 @@ export default function GroupClassPage() {
 
     fetchServices();
   }, []);
+
+  const handleBookNow = (service: Service) => {
+    setSelectedService(service);
+    setIsBookingModalOpen(true);
+  };
 
   return (
     <>
@@ -151,13 +193,33 @@ export default function GroupClassPage() {
                     <Stack gap="md">
                       <div>{renderDescription(service.description)}</div>
 
-                      <Group justify="left">
+                      <Group justify="space-between" align="center">
+                        <Group>
+                          {availabilityData[service.id] && (
+                            <Text 
+                              size="sm" 
+                              c={availabilityData[service.id].available ? "green" : "red"}
+                              fw={500}
+                            >
+                              {availabilityData[service.id].available 
+                                ? `✅ ${availabilityData[service.id].spotsLeft} spots left`
+                                : `❌ ${availabilityData[service.id].reason}`
+                              }
+                            </Text>
+                          )}
+                        </Group>
+                        
                         <Button
                           variant="filled"
                           className="bg-green-900 hover:bg-green-800 text-white"
                           size="sm"
+                          onClick={() => handleBookNow(service)}
+                          disabled={availabilityData[service.id] && !availabilityData[service.id].available}
                         >
-                          Book Now
+                          {availabilityData[service.id] && !availabilityData[service.id].available 
+                            ? "Fully Booked" 
+                            : "Book Now"
+                          }
                         </Button>
                       </Group>
                     </Stack>
@@ -168,6 +230,13 @@ export default function GroupClassPage() {
           )}
         </Stack>
       </Container>
+
+      <BookingForm
+        service={selectedService}
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        availabilityInfo={selectedService ? availabilityData[selectedService.id] : undefined}
+      />
     </>
   );
 }

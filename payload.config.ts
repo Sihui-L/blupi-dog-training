@@ -33,14 +33,40 @@ const config = buildConfig({
     {
       slug: "users",
       auth: true,
-      admin: { useAsTitle: "email" },
+      admin: { 
+        useAsTitle: "email",
+        // Hide from clients - they access via /dashboard
+        hidden: ({ user }) => user?.role !== 'admin',
+      },
+      access: {
+        // Admin can manage all users, clients can only read their own profile
+        create: ({ req }) => req.user?.role === 'admin',
+        read: ({ req }) => {
+          if (req.user?.role === 'admin') return true;
+          // Clients can only read their own profile
+          return {
+            id: {
+              equals: req.user?.id,
+            },
+          };
+        },
+        update: ({ req }) => {
+          if (req.user?.role === 'admin') return true;
+          // Clients can only update their own profile
+          return {
+            id: {
+              equals: req.user?.id,
+            },
+          };
+        },
+        delete: ({ req }) => req.user?.role === 'admin',
+      },
       fields: [
         {
           name: "role",
           type: "select",
           options: [
             { label: "Admin", value: "admin" },
-            { label: "Trainer", value: "trainer" },
             { label: "Client", value: "client" },
           ],
           defaultValue: "client",
@@ -55,6 +81,9 @@ const config = buildConfig({
     // Media (S3-only)
     {
       slug: "media",
+      access: {
+        read: () => true, // Allow public read access to media files
+      },
       upload: {
         imageSizes: [
           { name: "thumbnail", width: 400, height: 300, crop: "centre" },
@@ -68,7 +97,17 @@ const config = buildConfig({
     // Posts
     {
       slug: "posts",
-      admin: { useAsTitle: "title" },
+      admin: { 
+        useAsTitle: "title",
+        hidden: ({ user }) => user?.role !== 'admin',
+      },
+      access: {
+        // Only admins can manage posts
+        create: ({ req }) => req.user?.role === 'admin',
+        read: ({ req }) => req.user?.role === 'admin',
+        update: ({ req }) => req.user?.role === 'admin',
+        delete: ({ req }) => req.user?.role === 'admin',
+      },
       fields: [
         { name: "title", type: "text", required: true },
         { name: "description", type: "textarea", required: true },
@@ -102,10 +141,63 @@ const config = buildConfig({
       ],
     },
 
+    // Inquiries - Private session requests
+    {
+      slug: "inquiries",
+      admin: { 
+        useAsTitle: "clientName",
+        hidden: ({ user }) => user?.role !== 'admin',
+      },
+      access: {
+        // Only admins can manage inquiries
+        create: () => true, // Public contact form can create
+        read: ({ req }) => req.user?.role === 'admin',
+        update: ({ req }) => req.user?.role === 'admin',
+        delete: ({ req }) => req.user?.role === 'admin',
+      },
+      fields: [
+        { name: "clientName", type: "text", required: true },
+        { name: "email", type: "email", required: true },
+        { name: "phone", type: "text", required: true },
+        { name: "dogName", type: "text", required: true },
+        { name: "dogBreed", type: "text" },
+        { name: "dogAge", type: "text" },
+        { name: "behaviorIssues", type: "textarea" },
+        { name: "previousTraining", type: "textarea" },
+        { name: "goals", type: "textarea", required: true },
+        { name: "preferredDays", type: "text" },
+        { name: "preferredTimes", type: "text" },
+        { name: "additionalInfo", type: "textarea" },
+        {
+          name: "status",
+          type: "select",
+          options: [
+            { label: "New", value: "new" },
+            { label: "Contacted", value: "contacted" },
+            { label: "Scheduled", value: "scheduled" },
+            { label: "Completed", value: "completed" },
+          ],
+          defaultValue: "new",
+          required: true,
+        },
+        { name: "adminNotes", type: "textarea", admin: { description: "Internal notes (not visible to client)" } },
+      ],
+    },
+
     // Services
     {
       slug: "services",
-      admin: { useAsTitle: "name" },
+      admin: { 
+        useAsTitle: "name",
+        hidden: ({ user }) => user?.role !== 'admin',
+      },
+      access: {
+        // Only admins can manage services
+        create: ({ req }) => req.user?.role === 'admin',
+        read: ({ req }) => req.user?.role === 'admin',
+        update: ({ req }) => req.user?.role === 'admin',
+        delete: ({ req }) => req.user?.role === 'admin',
+      },
       fields: [
         { name: "name", type: "text", required: true },
         {
@@ -140,29 +232,53 @@ const config = buildConfig({
           admin: {
             condition: (data) =>
               data.type === "group" || data.type === "workshop",
+            description: "Maximum number of participants for group classes/workshops",
           },
         },
-      ],
-    },
-
-    // Testimonials
-    {
-      slug: "testimonials",
-      admin: { useAsTitle: "clientName" },
-      fields: [
-        { name: "clientName", type: "text", required: true },
-        { name: "review", type: "textarea", required: true },
-        { name: "rating", type: "number", min: 1, max: 5, required: true },
-        { name: "photo", type: "upload", relationTo: "media" },
-        { name: "isPublished", type: "checkbox", defaultValue: true },
-        { name: "serviceType", type: "relationship", relationTo: "services" },
+        {
+          name: "scheduledDate",
+          type: "date",
+          admin: {
+            condition: (data) =>
+              data.type === "group" || data.type === "workshop",
+            date: { pickerAppearance: "dayAndTime" },
+            description: "Scheduled date and time for this session",
+          },
+        },
+        {
+          name: "location",
+          type: "text",
+          admin: {
+            condition: (data) =>
+              data.type === "group" || data.type === "workshop",
+            description: "Location where the session will take place",
+          },
+        },
       ],
     },
 
     // Bookings
     {
       slug: "bookings",
-      admin: { useAsTitle: "id" },
+      admin: { 
+        useAsTitle: "id",
+        hidden: ({ user }) => user?.role !== 'admin',
+      },
+      access: {
+        // Admin can manage all bookings
+        create: ({ req }) => req.user?.role === 'admin',
+        read: ({ req }) => {
+          if (req.user?.role === 'admin') return true;
+          // Clients can only see their own bookings
+          return {
+            client: {
+              equals: req.user?.id,
+            },
+          };
+        },
+        update: ({ req }) => req.user?.role === 'admin', // Only admin can update
+        delete: ({ req }) => req.user?.role === 'admin', // Only admin can delete
+      },
       fields: [
         {
           name: "client",

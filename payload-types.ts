@@ -70,8 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     posts: Post;
+    inquiries: Inquiry;
     services: Service;
-    testimonials: Testimonial;
     bookings: Booking;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,8 +82,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     bookings: BookingsSelect<false> | BookingsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -127,7 +127,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  role: 'admin' | 'trainer' | 'client';
+  role: 'admin' | 'client';
   firstName: string;
   lastName: string;
   phone?: string | null;
@@ -211,6 +211,32 @@ export interface Post {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: number;
+  clientName: string;
+  email: string;
+  phone: string;
+  dogName: string;
+  dogBreed?: string | null;
+  dogAge?: string | null;
+  behaviorIssues?: string | null;
+  previousTraining?: string | null;
+  goals: string;
+  preferredDays?: string | null;
+  preferredTimes?: string | null;
+  additionalInfo?: string | null;
+  status: 'new' | 'contacted' | 'scheduled' | 'completed';
+  /**
+   * Internal notes (not visible to client)
+   */
+  adminNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
@@ -225,22 +251,18 @@ export interface Service {
   type: 'private' | 'group' | 'workshop';
   image?: (number | null) | Media;
   isActive?: boolean | null;
+  /**
+   * Maximum number of participants for group classes/workshops
+   */
   maxParticipants?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  clientName: string;
-  review: string;
-  rating: number;
-  photo?: (number | null) | Media;
-  isPublished?: boolean | null;
-  serviceType?: (number | null) | Service;
+  /**
+   * Scheduled date and time for this session
+   */
+  scheduledDate?: string | null;
+  /**
+   * Location where the session will take place
+   */
+  location?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -280,12 +302,12 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
-        relationTo: 'services';
-        value: number | Service;
+        relationTo: 'inquiries';
+        value: number | Inquiry;
       } | null)
     | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
+        relationTo: 'services';
+        value: number | Service;
       } | null)
     | ({
         relationTo: 'bookings';
@@ -423,6 +445,28 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  clientName?: T;
+  email?: T;
+  phone?: T;
+  dogName?: T;
+  dogBreed?: T;
+  dogAge?: T;
+  behaviorIssues?: T;
+  previousTraining?: T;
+  goals?: T;
+  preferredDays?: T;
+  preferredTimes?: T;
+  additionalInfo?: T;
+  status?: T;
+  adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
@@ -435,20 +479,8 @@ export interface ServicesSelect<T extends boolean = true> {
   image?: T;
   isActive?: T;
   maxParticipants?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials_select".
- */
-export interface TestimonialsSelect<T extends boolean = true> {
-  clientName?: T;
-  review?: T;
-  rating?: T;
-  photo?: T;
-  isPublished?: T;
-  serviceType?: T;
+  scheduledDate?: T;
+  location?: T;
   updatedAt?: T;
   createdAt?: T;
 }
