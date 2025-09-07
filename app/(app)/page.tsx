@@ -31,7 +31,7 @@ export default function HomePage() {
                   Professional Dog Training Services
                 </Title>
                 <Text size="xl" opacity={0.9}>
-                  Don't let minor concerns escalate into expensive issues. We're
+                  Don&apos;t let minor concerns escalate into expensive issues. We&apos;re
                   here for your pet as much as you need us to be, so your best
                   friends can live their longest, healthiest lives.
                 </Text>
@@ -82,7 +82,7 @@ export default function HomePage() {
               Introduction
             </Title>
             <Text ta="center" size="lg" c="dimmed" maw={800}>
-              Don't let minor concerns escalate into expensive issues. We're
+              Don&apos;t let minor concerns escalate into expensive issues. We&apos;re
               here for your pet as much as you need us to be, so your best
               friends can live their longest, healthiest lives.
             </Text>
@@ -181,8 +181,8 @@ export default function HomePage() {
                     </div>
                   </Group>
                   <Text size="sm" c="dimmed">
-                    "Amazing experience with professional training. Our dog has
-                    improved so much! Highly recommend Blupi Dog Training."
+                    &quot;Amazing experience with professional training. Our dog has
+                    improved so much! Highly recommend Blupi Dog Training.&quot;
                   </Text>
                 </Card>
               </GridCol>

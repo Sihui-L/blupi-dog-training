@@ -1,16 +1,18 @@
 version: 1
+compute:
+  runtime: nodejs20
+  memory: 1024 # Increase from default 512MB
+  timeout: 60 # Increase from default 30s
 frontend:
   phases:
     preBuild:
       commands:
         - echo "Starting pre-build phase..."
+        - nvm use 20
         - node --version
         - npm --version
         # Install dependencies
         - npm ci
-        # Create media directory for uploads
-        - mkdir -p media
-        - chmod 755 media
         # Generate Payload types if script exists
         - npm run generate:types || echo "Types generation skipped"
     build:
@@ -18,6 +20,17 @@ frontend:
         - echo "Starting build phase..."
         # Set NODE_ENV for production build
         - export NODE_ENV=production
+        # Create .env file with runtime environment variables
+        - echo "Creating .env file for runtime..."
+        - echo "DATABASE_URL=$DATABASE_URL" > .env
+        - echo "PAYLOAD_SECRET=$PAYLOAD_SECRET" >> .env
+        - echo "S3_BUCKET=$S3_BUCKET" >> .env
+        - echo "S3_REGION=$S3_REGION" >> .env
+        - echo "S3_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID" >> .env
+        - echo "S3_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY" >> .env
+        # Verify .env file was created
+        - echo "Environment variables written to .env file"
+        - ls -la .env
         # Build the Next.js application
         - npm run build
     postBuild:
@@ -27,7 +40,7 @@ frontend:
   artifacts:
     baseDirectory: .next
     files:
-      - '**/*'
+      - "**/*"
     name: BlupiDogTraining-$(date +%Y-%m-%d)
   cache:
     paths:
