@@ -13,8 +13,7 @@
     "start": "next start",
     "lint": "next lint",
     "payload": "payload",
-    "generate:types": "payload generate:types",
-    "seed": "tsx scripts/seed.ts"
+    "generate:types": "payload generate:types"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.882.0",
@@ -29,7 +28,6 @@
     "@payloadcms/storage-s3": "^3.54.0",
     "@tabler/icons-react": "^3.1.0",
     "dayjs": "^1.11.10",
-    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "next": "^15.5.2",
     "payload": "^3.54.0",
@@ -43,6 +41,7 @@
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
+    "dotenv": "^17.2.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.5.2",
     "eslint-plugin-react-hooks": "^4.6.2",

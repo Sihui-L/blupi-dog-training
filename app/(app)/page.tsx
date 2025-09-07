@@ -19,6 +19,42 @@ import { TEMPLATE_IMAGES } from "./constants/images";
 import ServiceCard from "./components/common/ServiceCard";
 
 export default function HomePage() {
+  // Static testimonials data
+  const testimonials = [
+    {
+      id: 1,
+      clientName: "Sarah Johnson",
+      review:
+        "Amazing experience with professional training. Our dog Charlie has improved so much! The trainer was patient and knowledgeable.",
+      rating: 5,
+      photo: TEMPLATE_IMAGES.testimonials[0],
+    },
+    {
+      id: 2,
+      clientName: "Michael Chen",
+      review:
+        "Excellent service! Our puppy learned basic commands quickly and the socialization sessions were fantastic. Highly recommend!",
+      rating: 5,
+      photo: TEMPLATE_IMAGES.testimonials[1],
+    },
+    {
+      id: 3,
+      clientName: "Emma Williams",
+      review:
+        "Professional and caring approach. They helped us with our rescue dog's anxiety issues. Couldn't be happier with the results!",
+      rating: 5,
+      photo: TEMPLATE_IMAGES.testimonials[2],
+    },
+    {
+      id: 4,
+      clientName: "David Thompson",
+      review:
+        "Outstanding training program! Our German Shepherd now walks perfectly on leash and responds to all commands. Worth every penny!",
+      rating: 5,
+      photo: TEMPLATE_IMAGES.testimonials[3],
+    },
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -31,9 +67,9 @@ export default function HomePage() {
                   Professional Dog Training Services
                 </Title>
                 <Text size="xl" opacity={0.9}>
-                  Don&apos;t let minor concerns escalate into expensive issues. We&apos;re
-                  here for your pet as much as you need us to be, so your best
-                  friends can live their longest, healthiest lives.
+                  Don&apos;t let minor concerns escalate into expensive issues.
+                  We&apos;re here for your pet as much as you need us to be, so
+                  your best friends can live their longest, healthiest lives.
                 </Text>
                 <Group gap="md">
                   <Button
@@ -82,9 +118,9 @@ export default function HomePage() {
               Introduction
             </Title>
             <Text ta="center" size="lg" c="dimmed" maw={800}>
-              Don&apos;t let minor concerns escalate into expensive issues. We&apos;re
-              here for your pet as much as you need us to be, so your best
-              friends can live their longest, healthiest lives.
+              Don&apos;t let minor concerns escalate into expensive issues.
+              We&apos;re here for your pet as much as you need us to be, so your
+              best friends can live their longest, healthiest lives.
             </Text>
 
             {/* Service Tags */}
@@ -157,32 +193,35 @@ export default function HomePage() {
             What You Say About Us
           </Title>
           <Grid>
-            {[1, 2, 3, 4].map((i) => (
-              <GridCol key={i} span={{ base: 12, sm: 6, lg: 3 }}>
+            {testimonials.map((testimonial) => (
+              <GridCol key={testimonial.id} span={{ base: 12, sm: 6, lg: 3 }}>
                 <Card shadow="sm" p="lg" radius="md" bg="white">
                   <Group mb="md">
                     <Image
-                      src={TEMPLATE_IMAGES.testimonials[i - 1]}
-                      alt={`Client ${i}`}
+                      src={testimonial.photo}
+                      alt={testimonial.clientName}
                       w={48}
                       h={48}
                       radius="xl"
                       fallbackSrc={TEMPLATE_IMAGES.avatar}
                     />
                     <div>
-                      <Text fw={600}>Happy Client {i}</Text>
+                      <Text fw={600}>{testimonial.clientName}</Text>
                       <Group gap={2}>
-                        {"★★★★★".split("").map((star, idx) => (
-                          <Text key={idx} c="yellow.6" size="sm">
-                            {star}
+                        {Array.from({ length: 5 }, (_, idx) => (
+                          <Text
+                            key={idx}
+                            c={idx < testimonial.rating ? "yellow.6" : "gray.3"}
+                            size="sm"
+                          >
+                            ★
                           </Text>
                         ))}
                       </Group>
                     </div>
                   </Group>
                   <Text size="sm" c="dimmed">
-                    &quot;Amazing experience with professional training. Our dog has
-                    improved so much! Highly recommend Blupi Dog Training.&quot;
+                    &quot;{testimonial.review}&quot;
                   </Text>
                 </Card>
               </GridCol>
@@ -199,28 +238,34 @@ export default function HomePage() {
               Certifications
             </Title>
             <Group justify="center" gap="xl">
-              <Stack align="center">
-                <Image
-                  src={TEMPLATE_IMAGES.certifications.abtc}
-                  alt="ABTC Certification"
-                  w={80}
-                  h={80}
-                  radius="md"
-                />
-                <Text ta="center" size="sm" c="dimmed">
-                  Registered Training Instructor
+              <Stack align="center" gap="md">
+                <div style={{ width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Image
+                    src={TEMPLATE_IMAGES.certifications.abtc}
+                    alt="ABTC Certification"
+                    fit="contain"
+                    w={80}
+                    h={80}
+                    radius="md"
+                  />
+                </div>
+                <Text ta="center" size="sm" c="dimmed" maw={120}>
+                  ABTC Registered Training Instructor
                 </Text>
               </Stack>
-              <Stack align="center">
-                <Image
-                  src={TEMPLATE_IMAGES.certifications.aggressive}
-                  alt="AggressiveDog.com Certification"
-                  w={80}
-                  h={80}
-                  radius="md"
-                />
-                <Text ta="center" size="sm" c="dimmed">
-                  AggressiveDog.com Specialist
+              <Stack align="center" gap="md">
+                <div style={{ width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Image
+                    src={TEMPLATE_IMAGES.certifications.ccpdt}
+                    alt="CCPDT Certification"
+                    fit="contain"
+                    w={80}
+                    h={80}
+                    radius="md"
+                  />
+                </div>
+                <Text ta="center" size="sm" c="dimmed" maw={120}>
+                  CCPDT Certified Professional Dog Trainer
                 </Text>
               </Stack>
             </Group>

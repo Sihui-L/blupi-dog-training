@@ -7,61 +7,49 @@ import {
   TextInput,
   Textarea,
   Button,
-  Grid,
-  GridCol,
   Group,
   Text,
   Card,
   Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { type ContactFormData } from "../types";
 import { useNotifications } from "../hooks/useNotifications";
 import PageHeader from "../components/common/PageHeader";
+
+interface SimpleContactFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  message: string;
+}
 
 export default function ContactPage() {
   const { showSuccess } = useNotifications();
 
-  const form = useForm<ContactFormData>({
+  const form = useForm<SimpleContactFormData>({
     initialValues: {
       firstName: "",
       lastName: "",
-      clientNumber: "",
       email: "",
       phone: "",
-      dogName: "",
-      dogBreed: "",
-      healthCheck: "",
-      behaviorIssues: "",
-      developmentBehaviors: "",
+      message: "",
     },
     validate: {
+      firstName: (value) => (value ? null : "First name is required"),
+      lastName: (value) => (value ? null : "Last name is required"),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      firstName: (value) =>
-        value && value.length > 0 ? null : "First name is required",
-      lastName: (value) =>
-        value && value.length > 0 ? null : "Last name is required",
-      dogName: (value) =>
-        value && value.length > 0 ? null : "Dog name is required",
-      dogBreed: (value) =>
-        value && value.length > 0 ? null : "Dog breed is required",
-      healthCheck: (value) =>
-        value && value.length > 0 ? null : "This field is required",
-      behaviorIssues: (value) =>
-        value && value.length > 0 ? null : "This field is required",
-      developmentBehaviors: (value) =>
-        value && value.length > 0 ? null : "This field is required",
+      phone: (value) => (value ? null : "Phone number is required"),
+      message: (value) => (value ? null : "Please tell us how we can help you"),
     },
   });
 
-  const handleSubmit = (values: ContactFormData) => {
+  const handleSubmit = (values: SimpleContactFormData) => {
     console.log("Contact form submitted:", values);
-
     showSuccess(
-      "Message sent!",
-      "Thank you for your message! We'll get back to you soon."
+      "Success",
+      "Your message has been sent! We'll get back to you soon."
     );
-
     form.reset();
   };
 
@@ -72,122 +60,66 @@ export default function ContactPage() {
         subtitle="Have questions about our services? We'd love to hear from you."
       />
 
-      <Container size="lg" pb={80}>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="xl">
-            {/* Client Details Section */}
-            <Paper shadow="md" p="xl" radius="md">
-              <Text size="xl" fw={600} mb="lg" c="gray.8">
-                Client Details
-              </Text>
+      <Container size="md" pb={80}>
+        <Paper p="xl" radius="md" shadow="sm">
+          <Stack gap="lg">
+            <Text size="xl" fw={600} ta="center" c="gray.8">
+              Send Me Your Questions
+            </Text>
 
-              <Grid>
-                <GridCol span={{ base: 12, md: 6 }}>
+            <form onSubmit={form.onSubmit(handleSubmit)}>
+              <Stack gap="md">
+                <Group grow>
                   <TextInput
                     label="First Name"
-                    placeholder="Enter your first name"
-                    withAsterisk
+                    placeholder="First"
                     {...form.getInputProps("firstName")}
+                    required
                   />
-                </GridCol>
-
-                <GridCol span={{ base: 12, md: 6 }}>
                   <TextInput
                     label="Last Name"
-                    placeholder="Enter your last name"
-                    withAsterisk
+                    placeholder="Last"
                     {...form.getInputProps("lastName")}
+                    required
                   />
-                </GridCol>
+                </Group>
 
-                <GridCol span={12}>
-                  <TextInput
-                    label="Client Number"
-                    placeholder="Enter your client number"
-                    withAsterisk
-                    {...form.getInputProps("clientNumber")}
-                  />
-                </GridCol>
-
-                <GridCol span={12}>
-                  <TextInput
-                    label="Email"
-                    placeholder="Enter your email address"
-                    withAsterisk
-                    {...form.getInputProps("email")}
-                  />
-                </GridCol>
-
-                <GridCol span={12}>
-                  <TextInput
-                    label="Phone"
-                    placeholder="Enter your phone number"
-                    {...form.getInputProps("phone")}
-                  />
-                </GridCol>
-              </Grid>
-            </Paper>
-
-            {/* About Your Dog Section */}
-            <Paper shadow="md" p="xl" radius="md">
-              <Text size="xl" fw={600} mb="lg" c="gray.8">
-                About Your Dog
-              </Text>
-
-              <Stack gap="md">
                 <TextInput
-                  label="Name of Dog"
-                  placeholder="Enter your dog's name"
-                  withAsterisk
-                  {...form.getInputProps("dogName")}
+                  label="Email"
+                  placeholder="your.email@example.com"
+                  {...form.getInputProps("email")}
+                  required
                 />
 
                 <TextInput
-                  label="Breed"
-                  placeholder="Enter your dog's breed"
-                  withAsterisk
-                  {...form.getInputProps("dogBreed")}
+                  label="Phone"
+                  placeholder="Your phone number"
+                  {...form.getInputProps("phone")}
+                  required
                 />
 
                 <Textarea
-                  label="Has your dog been to the vet in the past 12 months for any reason other than a routine annual check up? If so, please give details."
-                  placeholder="Please provide details about vet visits..."
+                  label="How can we assist you?"
+                  placeholder="Please describe your needs or any questions you have..."
                   minRows={4}
-                  withAsterisk
-                  {...form.getInputProps("healthCheck")}
+                  {...form.getInputProps("message")}
+                  required
                 />
 
-                <Textarea
-                  label="Has your dog shown any unpredictable behaviour? If so, please give details."
-                  placeholder="Please describe any unpredictable behaviors..."
-                  minRows={4}
-                  withAsterisk
-                  {...form.getInputProps("behaviorIssues")}
-                />
-
-                <Textarea
-                  label="Has your dog shown any developmental behaviours, this could include but not limited to: excessive licking, grooming, stretching, jumping up, perhaps? If so, please give details."
-                  placeholder="Please describe any developmental behaviors..."
-                  minRows={4}
-                  withAsterisk
-                  {...form.getInputProps("developmentBehaviors")}
-                />
+                <Group justify="center" mt="lg">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="bg-green-900 hover:bg-green-800 text-white"
+                    px={50}
+                  >
+                    SUBMIT
+                  </Button>
+                </Group>
               </Stack>
-            </Paper>
-
-            {/* Submit Button */}
-            <Group justify="center">
-              <Button
-                type="submit"
-                size="lg"
-                radius="md"
-                className="bg-green-900 hover:bg-green-800 text-white"
-              >
-                Submit Message
-              </Button>
-            </Group>
+            </form>
           </Stack>
-        </form>
+        </Paper>
 
         {/* Contact Information */}
         <Card shadow="sm" p="xl" radius="md" mt={64} bg="gray.0">
@@ -197,7 +129,7 @@ export default function ContactPage() {
           <Stack gap="sm" align="center">
             <Text c="gray.7">📧 info@blupidogtraining.com</Text>
             <Text c="gray.7">📱 +44 7123 456 789</Text>
-            <Text c="gray.7">📍 Serving areas around Buckinghamshire</Text>
+            <Text c="gray.7">📍 Serving areas around London</Text>
           </Stack>
         </Card>
       </Container>
